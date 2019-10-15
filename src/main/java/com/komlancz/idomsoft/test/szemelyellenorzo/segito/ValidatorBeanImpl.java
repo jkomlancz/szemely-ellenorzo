@@ -14,36 +14,38 @@ public class ValidatorBeanImpl implements ValidatorBean {
     public List<String> ellenorzes(SzemelyDTO adat){
         List<String> hibak = new ArrayList<>();
 
-        visNevEllenorzes(hibak, adat.getVisNev());
+        nevEllenorzes(NevTipus.VISELT, hibak, adat.getVisNev());
+        nevEllenorzes(NevTipus.SZUL_NEV, hibak, adat.getSzulNev());
+        nevEllenorzes(NevTipus.ANYJA_NEVE, hibak, adat.getaNev());
 
         return hibak;
     }
 
-    private void visNevEllenorzes(List<String> hibak, String visNev){
+    private void nevEllenorzes(NevTipus nevTipus, List<String> hibak, String visNev){
 
-        hosszEllenorzes(hibak, visNev);
-        karakterEllenorzes(hibak, visNev);
-        nevelemekSzamanakEllenorzese(hibak, visNev);
+        hosszEllenorzes(nevTipus, hibak, visNev);
+        karakterEllenorzes(nevTipus, hibak, visNev);
+        nevelemekSzamanakEllenorzese(nevTipus, hibak, visNev);
     }
 
-    private void hosszEllenorzes(List<String> hibak, String nev){
+    private void hosszEllenorzes(NevTipus nevTipus, List<String> hibak, String nev){
 
         if (nev.length() > MAX_NEV_HOSSZ){
-            hibak.add(String.format("A név túl hosszú (%s karakter)! Maximum hossz 80 karakter", nev.length()));
+            hibak.add(String.format("A %s túl hosszú (%s karakter)! Maximum hossz 80 karakter", nevTipus.getName(), nev.length()));
         }
     }
 
-    private void karakterEllenorzes(List<String> hibak, String nev){
+    private void karakterEllenorzes(NevTipus nevTipus, List<String> hibak, String nev){
         char[] karakterek = nev.toCharArray();
 
         for (char k : karakterek){
             if (!VALID_KARAKTEREK.contains(String.valueOf(k).toUpperCase())){
-                hibak.add("Invalid karakter: " + k);
+                hibak.add(String.format("%s esetében invalid karakter található (%s)", nevTipus.getName(), k));
             }
         }
     }
 
-    private void nevelemekSzamanakEllenorzese(List<String> hibak, String nev){
+    private void nevelemekSzamanakEllenorzese(NevTipus nevTipus, List<String> hibak, String nev){
         String nevTmp = nev.toLowerCase();
 
         if (nevTmp.startsWith("dr ")) nevTmp = nevTmp.replace("dr ", "");
@@ -57,11 +59,11 @@ public class ValidatorBeanImpl implements ValidatorBean {
             String masodikNevelem = nev.substring(szokozIndex);
 
             if (masodikNevelem.isEmpty()){
-                hibak.add("Név elemek száma nem megfelelő");
+                hibak.add(String.format("%s elemek száma nem megfelelő", nevTipus.getName()));
             }
         }
         else {
-            hibak.add("Név elemek száma nem megfelelő");
+            hibak.add(String.format("%s elemek száma nem megfelelő", nevTipus.getName()));
         }
     }
 }
