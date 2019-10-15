@@ -9,6 +9,7 @@ import java.util.List;
 public class ValidatorBeanImpl implements ValidatorBean {
 
     private static final List<String> VALID_KARAKTEREK = Arrays.asList("-", "/", ".", "\'", " ", "Ä", "A", "Á", "B", "C", "D", "E", "É", "F", "G", "H", "I", "Í", "J", "K", "L", "M", "N", "O", "Ó", "Ö", "Ő", "P", "R", "S", "T", "U", "Ú", "Ü", "Ű", "V", "Z");
+    private static final int MAX_NEV_HOSSZ = 80;
 
     public List<String> ellenorzes(SzemelyDTO adat){
         List<String> hibak = new ArrayList<>();
@@ -20,8 +21,16 @@ public class ValidatorBeanImpl implements ValidatorBean {
 
     private void visNevEllenorzes(List<String> hibak, String visNev){
 
+        hosszEllenorzes(hibak, visNev);
         karakterEllenorzes(hibak, visNev);
         nevelemekSzamanakEllenorzese(hibak, visNev);
+    }
+
+    private void hosszEllenorzes(List<String> hibak, String nev){
+
+        if (nev.length() > MAX_NEV_HOSSZ){
+            hibak.add(String.format("A név túl hosszú (%s karakter)! Maximum hossz 80 karakter", nev.length()));
+        }
     }
 
     private void karakterEllenorzes(List<String> hibak, String nev){
