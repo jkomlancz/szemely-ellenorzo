@@ -48,6 +48,8 @@ public class ValidatorBeanImpl implements ValidatorBean {
 
         if (nevTmp.startsWith("dr ")) nevTmp = nevTmp.replace("dr ", "");
         if (nevTmp.startsWith("dr. ")) nevTmp = nevTmp.replace("dr. ", "");
+        if (nevTmp.endsWith(" dr")) nevTmp = nevTmp.replace(" dr", "");
+        if (nevTmp.endsWith(" dr.")) nevTmp = nevTmp.replace(" dr.", "");
 
         int szokozIndex = nevTmp.indexOf(" ");
 
