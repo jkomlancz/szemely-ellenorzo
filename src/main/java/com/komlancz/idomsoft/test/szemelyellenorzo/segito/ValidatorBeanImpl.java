@@ -137,7 +137,6 @@ public class ValidatorBeanImpl implements ValidatorBean
         }
 
         File fajl = new ClassPathResource(fajlNev, this.getClass().getClassLoader()).getFile();
-//        File fajl = new File(resource.getPath());
 
         return JsonLoader.fromFile(fajl);
     }

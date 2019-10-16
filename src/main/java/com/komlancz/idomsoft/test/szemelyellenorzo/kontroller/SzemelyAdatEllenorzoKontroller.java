@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@RestController public class SzemelyAdatEllenorzo
+@RestController public class SzemelyAdatEllenorzoKontroller
 {
 
     @Autowired ValidatorBean validator;
