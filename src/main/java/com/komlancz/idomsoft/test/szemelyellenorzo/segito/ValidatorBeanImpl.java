@@ -3,24 +3,16 @@ package com.komlancz.idomsoft.test.szemelyellenorzo.segito;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.github.fge.jackson.JsonLoader;
-
 import com.komlancz.idomsoft.test.szemelyellenorzo.model.SzemelyDTO;
 import com.komlancz.idomsoft.test.szemelyellenorzo.segito.entitas.Allampolgarsag;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ValidatorBeanImpl implements ValidatorBean
 {
@@ -39,11 +31,36 @@ public class ValidatorBeanImpl implements ValidatorBean
         nevEllenorzes(NevTipus.SZUL_NEV, hibak, adat.getSzulNev());
         nevEllenorzes(NevTipus.ANYJA_NEVE, hibak, adat.getaNev());
         nemEllenorzes(hibak, adat.getNeme());
+        korEllenorzes(hibak, adat.getSzulDat());
 
         String allampolgarsag = allampolgarsagEllenorzese(hibak, adat.getAllampKod());
         adat.setAllampDekod(allampolgarsag);
 
         return hibak;
+    }
+
+    private void korEllenorzes(List<String> hibak, Date szulDat){
+        if (szulDat != null){
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date());
+            c.add(Calendar.YEAR, -18);
+
+            Date minimumKorDate = c.getTime();
+
+            c.setTime(new Date());
+            c.add(Calendar.YEAR, -120);
+
+            Date maximumKorDate =  c.getTime();
+
+            if (szulDat.after(minimumKorDate)){
+                hibak.add("A személy még nem múlt el 18 éves");
+            }
+            if (szulDat.before(maximumKorDate)){
+                hibak.add("A személy több mint 120 éves");
+            }
+        }else {
+            hibak.add("Nincsen születési dátum megadva!");
+        }
     }
 
     private String allampolgarsagEllenorzese(List<String> hibak, String orszagKod) throws IOException
