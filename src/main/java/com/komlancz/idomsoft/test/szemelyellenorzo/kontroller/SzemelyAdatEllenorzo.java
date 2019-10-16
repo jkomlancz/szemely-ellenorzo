@@ -28,6 +28,7 @@ import java.io.IOException;
         {
             valasz.setUzenet("IdomSoft validacio!");
             valasz.setHibak(validator.ellenorzes(adat));
+            valasz.setSzemelyDTO(adat);
             valasz.setHttpStatus(HttpStatus.OK);
         }
         catch (IOException e)
