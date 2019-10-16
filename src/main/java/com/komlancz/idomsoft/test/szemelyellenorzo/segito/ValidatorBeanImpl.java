@@ -11,7 +11,6 @@ public class ValidatorBeanImpl implements ValidatorBean
 
     private static final List<String> VALID_KARAKTEREK = Arrays.asList("-", "/", ".", "\'", " ", "Ä", "A", "Á", "B", "C", "D", "E", "É",
             "F", "G", "H", "I", "Í", "J", "K", "L", "M", "N", "O", "Ó", "Ö", "Ő", "P", "R", "S", "T", "U", "Ú", "Ü", "Ű", "V", "Z");
-    private static final String[] VALID_NEMEK = new String[] { "F", "N" };
     private static final int MAX_NEV_HOSSZ = 80;
 
     public List<String> ellenorzes(SzemelyDTO adat)
