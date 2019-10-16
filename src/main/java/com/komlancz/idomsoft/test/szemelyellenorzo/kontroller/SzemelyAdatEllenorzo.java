@@ -19,7 +19,7 @@ import java.io.IOException;
 
     @Autowired ValidatorBean validator;
 
-    @PostMapping(path = "/ellenorzes")
+    @PostMapping(path = "/szemely-adat-ellenorzes")
     public Valasz szemelyAdatEllenorzes(@RequestBody SzemelyDTO adat)
     {
         Valasz valasz = new Valasz();
