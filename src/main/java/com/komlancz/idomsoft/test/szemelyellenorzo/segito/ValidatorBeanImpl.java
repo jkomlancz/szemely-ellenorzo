@@ -164,6 +164,11 @@ public class ValidatorBeanImpl implements ValidatorBean
             nevTmp = nevTmp.replace(" dr.", "");
         }
 
+        if (nevTmp.startsWith(" "))
+        {
+            nevTmp = nevTmp.substring(1);
+        }
+
         int szokozIndex = nevTmp.indexOf(" ");
 
         if (szokozIndex > 0)
