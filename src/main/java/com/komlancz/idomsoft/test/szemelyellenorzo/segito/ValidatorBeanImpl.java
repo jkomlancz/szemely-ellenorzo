@@ -65,32 +65,39 @@ public class ValidatorBeanImpl implements ValidatorBean
 
     private String allampolgarsagEllenorzese(List<String> hibak, String orszagKod) throws IOException
     {
-        try
+        String allampolgarsag = "";
+        if (orszagKod != null && !orszagKod.isEmpty())
         {
-            String allampolgarsag = "";
-
-            JsonNode allampolgarsagKodszotar = kodszotarFelolvasasa(ALLAMPOLGARSAG_KODSZOTAR_FAJLNEV);
-
-            List<Allampolgarsag> allampolgarsagok = allampolgarsagsagokMappalese(allampolgarsagKodszotar);
-
-            Optional<Allampolgarsag> talalat = allampolgarsagok.stream().filter(a -> a.getKod().equals(orszagKod)).findFirst();
-
-            if (talalat.isPresent())
+            try
             {
-                allampolgarsag = talalat.get().getAllampolgarsag();
-            }
-            else
-            {
-                hibak.add("Invalid ország kód: " + orszagKod);
-            }
+                JsonNode allampolgarsagKodszotar = kodszotarFelolvasasa(ALLAMPOLGARSAG_KODSZOTAR_FAJLNEV);
 
-            return allampolgarsag;
+                List<Allampolgarsag> allampolgarsagok = allampolgarsagsagokMappalese(allampolgarsagKodszotar);
+
+                Optional<Allampolgarsag> talalat = allampolgarsagok.stream().filter(a -> a.getKod().equals(orszagKod)).findFirst();
+
+                if (talalat.isPresent())
+                {
+                    allampolgarsag = talalat.get().getAllampolgarsag();
+                }
+                else
+                {
+                    hibak.add("Invalid ország kód: " + orszagKod);
+                }
+
+                return allampolgarsag;
+            }
+            catch (IOException e)
+            {
+                logger.error("Allamplgarsag kodszotar fajl felolvasasi hiba!", e);
+                throw e;
+            }
         }
-        catch (IOException e)
+        else
         {
-            logger.error("Allamplgarsag kodszotar fajl felolvasasi hiba!", e);
-            throw e;
+            hibak.add("Allampolgarsag kodja üres!");
         }
+        return allampolgarsag;
     }
 
     private List<Allampolgarsag> allampolgarsagsagokMappalese(JsonNode allampolgNode) throws JsonProcessingException
@@ -202,10 +209,16 @@ public class ValidatorBeanImpl implements ValidatorBean
         }
     }
 
-    private void nevEllenorzes(NevTipus nevTipus, List<String> hibak, String visNev)
+    private void nevEllenorzes(NevTipus nevTipus, List<String> hibak, String nev)
     {
-        hosszEllenorzes(nevTipus, hibak, visNev);
-        karakterEllenorzes(nevTipus, hibak, visNev);
-        nevelemekSzamanakEllenorzese(nevTipus, hibak, visNev);
+        if (nev != null){
+            hosszEllenorzes(nevTipus, hibak, nev);
+            karakterEllenorzes(nevTipus, hibak, nev);
+            nevelemekSzamanakEllenorzese(nevTipus, hibak, nev);
+        }
+        else
+        {
+            hibak.add(String.format("%s üres", nevTipus));
+        }
     }
 }

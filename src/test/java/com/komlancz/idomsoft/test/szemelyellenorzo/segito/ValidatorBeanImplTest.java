@@ -58,6 +58,19 @@ public class ValidatorBeanImplTest {
     }
 
     @Test
+    public void uresVisNevTest() throws IOException {
+
+        // Given
+        szemelyDTO.setVisNev(null);
+
+        // When
+        hibak = validatorBean.ellenorzes(szemelyDTO);
+
+        // Then
+        assertEquals(1, hibak.size());
+    }
+
+    @Test
     public void hibasKarakterASzulNevbenTest() throws IOException {
 
         // Given
@@ -143,6 +156,20 @@ public class ValidatorBeanImplTest {
     }
 
     @Test
+    public void uresAllampolgarsagTest() throws IOException {
+
+        // Given
+        szemelyDTO.setAllampKod(null);
+
+        // When
+        hibak = validatorBean.ellenorzes(szemelyDTO);
+
+        // Then
+        assertTrue(szemelyDTO.getAllampDekod().isEmpty());
+        assertEquals(1, hibak.size());
+    }
+
+    @Test
     public void tulFiatalTest() throws IOException {
 
         // Given
@@ -164,8 +191,21 @@ public class ValidatorBeanImplTest {
         // Given
         calendar.setTime(new Date());
         calendar.add(Calendar.YEAR, -121);
-        Date fiatalSzul =  calendar.getTime();
-        szemelyDTO.setSzulDat(fiatalSzul);
+        Date idoslSzul =  calendar.getTime();
+        szemelyDTO.setSzulDat(idoslSzul);
+
+        // When
+        hibak = validatorBean.ellenorzes(szemelyDTO);
+
+        // Then
+        assertEquals(1, hibak.size());
+    }
+
+    @Test
+    public void uresSzulDatTest() throws IOException {
+
+        // Given
+        szemelyDTO.setSzulDat(null);
 
         // When
         hibak = validatorBean.ellenorzes(szemelyDTO);
