@@ -13,12 +13,21 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>szemely-ellenorzo</name>
 	<description>SzemelyDTO adatait hivatott ellenorizni</description>
+	<packaging>war</packaging>
 
 	<properties>
 		<java.version>1.8</java.version>
+		<start-class>com.komlancz.idomsoft.test.szemelyellenorzo.SzemelyEllenorzoApplication</start-class>
 	</properties>
 
 	<dependencies>
+		<!--it have to run in Tomcat-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -72,6 +81,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>szemelyellenorzo</finalName>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

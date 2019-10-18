@@ -10,18 +10,28 @@ import com.komlancz.idomsoft.test.szemelyellenorzo.service.okmanyellenorzo.model
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 @RestController public class SzemelyAdatEllenorzoKontroller
 {
-
     @Autowired ValidatorBean validator;
     @Autowired OkmanyEllenorzoRESTService okmanyEllenorzoRESTService;
+
+    @GetMapping(path = "/")
+    public String welcome(){
+        return "POST hívással lehet használni az alkalmazást az alábbi path-on: /szemely-adat-ellenorzes";
+    }
+
+    @GetMapping(path = "/{p}")
+    public String welcome2(@PathVariable("p") String path){
+        String rosszPath = String.format("/%s GET nem elérhető! ", path);
+        return rosszPath.isEmpty() ?
+                "POST hívással lehet használni az alkalmazást az alábbi path-on: /szemely-adat-ellenorzes"
+                : rosszPath + "POST hívással lehet használni az alkalmazást az alábbi path-on: /szemely-adat-ellenorzes";
+    }
 
     @PostMapping(path = "/szemely-adat-ellenorzes")
     public Valasz szemelyAdatEllenorzes(@RequestBody SzemelyDTO adat)
