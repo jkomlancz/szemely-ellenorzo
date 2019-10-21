@@ -3,22 +3,33 @@ package com.komlancz.idomsoft.test.szemelyellenorzo.segito;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.github.fge.jackson.JsonLoader;
+
 import com.komlancz.idomsoft.test.szemelyellenorzo.model.SzemelyDTO;
 import com.komlancz.idomsoft.test.szemelyellenorzo.segito.entitas.Allampolgarsag;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 public class ValidatorBeanImpl implements ValidatorBean
 {
     private static final Logger logger = LoggerFactory.getLogger(ValidatorBean.class);
     private static final List<String> VALID_KARAKTEREK = Arrays.asList("-", "/", ".", "\'", " ", "Ä", "A", "Á", "B", "C", "D", "E", "É",
-            "F", "G", "H", "I", "Í", "J", "K", "L", "M", "N", "O", "Ó", "Ö", "Ő", "P", "R", "S", "T", "U", "Ú", "Ü", "Ű", "V", "Z", "X", "Y");
+            "F", "G", "H", "I", "Í", "J", "K", "L", "M", "N", "O", "Ó", "Ö", "Ő", "P", "R", "S", "T", "U", "Ú", "Ü", "Ű", "V", "Z", "X",
+            "Y");
 
     private static final String ALLAMPOLGARSAG_KODSZOTAR_FAJLNEV = "kodszotar21_allampolg";
     private static final int MAX_NEV_HOSSZ = 80;
@@ -39,34 +50,10 @@ public class ValidatorBeanImpl implements ValidatorBean
         return hibak;
     }
 
-    private void korEllenorzes(List<String> hibak, Date szulDat){
-        if (szulDat != null){
-            Calendar c = Calendar.getInstance();
-            c.setTime(new Date());
-            c.add(Calendar.YEAR, -18);
-
-            Date minimumKorDate = c.getTime();
-
-            c.setTime(new Date());
-            c.add(Calendar.YEAR, -120);
-
-            Date maximumKorDate =  c.getTime();
-
-            if (szulDat.after(minimumKorDate)){
-                hibak.add("A személy még nem múlt el 18 éves");
-            }
-            if (szulDat.before(maximumKorDate)){
-                hibak.add("A személy több mint 120 éves");
-            }
-        }else {
-            hibak.add("Nincsen születési dátum megadva!");
-        }
-    }
-
     private String allampolgarsagEllenorzese(List<String> hibak, String orszagKod) throws IOException
     {
         String allampolgarsag = "";
-        if (orszagKod != null && !orszagKod.isEmpty())
+        if ((orszagKod != null) && !orszagKod.isEmpty())
         {
             try
             {
@@ -97,6 +84,7 @@ public class ValidatorBeanImpl implements ValidatorBean
         {
             hibak.add("Allampolgarsag kodja üres!");
         }
+
         return allampolgarsag;
     }
 
@@ -148,18 +136,49 @@ public class ValidatorBeanImpl implements ValidatorBean
         return JsonLoader.fromFile(fajl);
     }
 
+    private void korEllenorzes(List<String> hibak, Date szulDat)
+    {
+        if (szulDat != null)
+        {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date());
+            c.add(Calendar.YEAR, -18);
+
+            Date minimumKorDate = c.getTime();
+
+            c.setTime(new Date());
+            c.add(Calendar.YEAR, -120);
+
+            Date maximumKorDate = c.getTime();
+
+            if (szulDat.after(minimumKorDate))
+            {
+                hibak.add("A személy még nem múlt el 18 éves");
+            }
+
+            if (szulDat.before(maximumKorDate))
+            {
+                hibak.add("A személy több mint 120 éves");
+            }
+        }
+        else
+        {
+            hibak.add("Nincsen születési dátum megadva!");
+        }
+    }
+
     private void nemEllenorzes(List<String> hibak, String neme)
     {
-        if (!neme.isEmpty())
+        if ((neme == null) || neme.isEmpty())
+        {
+            hibak.add("Nem paraméter üres!");
+        }
+        else
         {
             if (!neme.equals("F") && !neme.equals("N"))
             {
                 hibak.add("Nem megfelelő nem azonosító: " + neme);
             }
-        }
-        else
-        {
-            hibak.add("Nem paraméter üres!");
         }
     }
 
@@ -211,7 +230,8 @@ public class ValidatorBeanImpl implements ValidatorBean
 
     private void nevEllenorzes(NevTipus nevTipus, List<String> hibak, String nev)
     {
-        if (nev != null){
+        if (nev != null)
+        {
             hosszEllenorzes(nevTipus, hibak, nev);
             karakterEllenorzes(nevTipus, hibak, nev);
             nevelemekSzamanakEllenorzese(nevTipus, hibak, nev);
