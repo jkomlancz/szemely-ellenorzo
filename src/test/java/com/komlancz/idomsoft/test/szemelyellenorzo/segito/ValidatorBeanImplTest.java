@@ -171,7 +171,6 @@ public class ValidatorBeanImplTest {
 
     @Test
     public void tulFiatalTest() throws IOException {
-
         // Given
         calendar.setTime(new Date());
         calendar.add(Calendar.YEAR, -17);
