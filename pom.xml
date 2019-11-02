@@ -8,6 +8,7 @@
 		<version>2.1.3.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.komlancz.idomsoft.test</groupId>
 	<artifactId>szemely-ellenorzo</artifactId>
 	<version>0.0.2</version>
