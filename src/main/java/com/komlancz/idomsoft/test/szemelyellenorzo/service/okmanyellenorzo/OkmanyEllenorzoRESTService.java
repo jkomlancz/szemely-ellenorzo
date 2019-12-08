@@ -18,6 +18,8 @@ public class OkmanyEllenorzoRESTService {
     @Autowired Beallitasok beallitasok;
     private static final String OKMANY_ELLENORES_PATH = "/okmany-ellenorzes";
 
+    @Autowired private OkmanyEllenorzoServiceProxy proxy;
+
     private final RestTemplate restTemplate;
 
     public OkmanyEllenorzoRESTService(RestTemplateBuilder restTemplateBuilder) {
@@ -43,7 +45,8 @@ public class OkmanyEllenorzoRESTService {
         }
 
         try {
-            OkmanyEllenorzoValasz valasz = this.restTemplate.postForObject(servicePath + OKMANY_ELLENORES_PATH , okmanyok, OkmanyEllenorzoValasz.class);
+//            OkmanyEllenorzoValasz valasz = this.restTemplate.postForObject(servicePath + OKMANY_ELLENORES_PATH , okmanyok, OkmanyEllenorzoValasz.class);
+            OkmanyEllenorzoValasz valasz = proxy.okmanyokEllenorzese(okmanyok);
             if (valasz == null){
                 throw new OkmanyEllenoroServiceException("Okmanyok ellenorzese közben ismeretlen hiba lépett fel!");
             }
